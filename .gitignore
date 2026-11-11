@@ -1,5 +1,6 @@
 # Python-generated files
 __pycache__/
+.pytest_pycache/
 *.py[oc]
 build/
 dist/

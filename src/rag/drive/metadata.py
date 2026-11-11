@@ -3,16 +3,15 @@ from pathlib import Path
 import psycopg
 from dataclasses import asdict
 from dotenv import load_dotenv
-from .datatypes import SourceFile
+from .source_file import SourceFile
 
 load_dotenv()
 
 # DB_NAME = os.getenv("POSTGRES_DB")
 # DB_USER = os.getenv("POSTGRES_USER")
-# DB_PASS = os.getenv("POSTGRES_PASSWORD")
+
 DB_URL = os.getenv("DATABASE_URL")
 # print(DB_NAME)
-# print(DB_PASS)
 # print(DB_URL)
 UPSERT_FILE_SQL = """
 INSERT INTO files (
