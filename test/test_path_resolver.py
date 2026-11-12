@@ -1,4 +1,4 @@
-from rag.drive.path_resolver import PathResolver
+from rag.sources.gdrive.path_resolver import PathResolver
 
 FOLDER = PathResolver.FOLDER
 

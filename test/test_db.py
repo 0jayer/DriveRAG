@@ -9,7 +9,7 @@ from psycopg.rows import dict_row
 # project root. Ensure the root is importable both from the editor and when
 # this file is run directly.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from data.metadata import get_conn
+from rag.sources.metadata import get_conn
 
 
 # uv run test_db.py                                   # summary

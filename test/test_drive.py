@@ -1,6 +1,6 @@
-from rag.drive.drive import Drive
-from rag.drive.drive_auth import DriveAuth
-from rag.drive.path_resolver import PathResolver
+from rag.sources.gdrive.drive import Drive
+from rag.sources.gdrive.drive_auth_cred_provider import DriveAuth
+from rag.sources.gdrive.path_resolver import PathResolver
 
 drive = Drive(
     DriveAuth("F:/rag/secrets/credentials.json", "F:/rag/secrets/token.json"),

@@ -1,5 +1,5 @@
-from data.drive import auth, get_service, list_source_files
-from data.metadata import get_conn, upsert_files
+from rag.sources.gdrive.drive import auth, get_service, list_source_files
+from rag.sources.metadata import get_conn, upsert_files
 
 service = get_service(auth())
 account_id = service.about().get(fields="user(emailAddress)").execute()["user"]["emailAddress"]

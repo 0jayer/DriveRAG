@@ -2,36 +2,42 @@ from datetime import datetime
 
 from googleapiclient.discovery import build
  
-from rag.drive.source_file import SourceFile
-from rag.drive.drive_auth import DriveAuth
-from rag.drive.data_source import DataSource
-from rag.drive.path_resolver import PathResolver
+from rag.sources.source_file import SourceFile
+from rag.sources.data_source import DataSource
+from rag.sources.gdrive.path_resolver import PathResolver
+from rag.sources.gdrive.cred_provider import CredentialProvider
 
 class Drive(DataSource):
-  def __init__(self, auth:DriveAuth, resolver:PathResolver):
+  def __init__(self, credential_provider: CredentialProvider, resolver:PathResolver,service_builder=build):
     #super().__init__()       DataSource has no init
-    self.auth = auth
-    self.resolver = resolver
-    self.service = None
-    self.account_id = None
+    self._credential_provider = credential_provider
+    self._resolver = resolver
+    self._service_builder = service_builder
+    self._service = None
+    self._account_id = None
 
 
 
   #google drive api call
-  def connect(self):
-    self.service = build("drive", "v3", credentials = self.auth.get_credentials())
-    self.account_id = (self.service.about().get(fields="user(emailAddress)").execute()["user"]["emailAddress"])
+  def connect(self) -> None:
+    credentials = self._credential_provider.get_credentials()
+    self._service = self._service_builder(
+            "drive",
+            "v3",
+            credentials=credentials,
+        )
+    self._account_id = (self._service.about().get(fields="user(emailAddress)").execute()["user"]["emailAddress"])
     return self
 
-  def list_source_files(self):
-      files = self.resolver.resolve_paths(self._list_raw_files())
+  def list_source_files(self) -> list[SourceFile]:
+      files = self._resolver.resolve_paths(self._list_raw_files())
       return [
           self.to_source_file(f)
           for f in files
           if f["mimeType"] != PathResolver.FOLDER
       ]
   
-  def fetch_content(self, file):
+  def fetch_content(self, file) -> bytes:
     raise NotImplementedError("Coming with the parsing step")
 
   #def list files with their attributes
@@ -40,7 +46,7 @@ class Drive(DataSource):
     page_token = None
     while True:
       results = (
-            self.service.files()
+            self._service.files()
             .list(
               q = "trashed = false",
               pageSize = 1000, 
@@ -59,7 +65,7 @@ class Drive(DataSource):
   def to_source_file(self, raw):
     size = raw.get("size")
     return SourceFile(
-      account_id = self.account_id,
+      account_id = self._account_id,
       source = "gdrive",
       external_id = raw["id"],
       name = raw["name"],

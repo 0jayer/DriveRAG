@@ -1,6 +1,6 @@
 from googleapiclient.discovery import build
 
-from rag.drive.drive_auth import DriveAuth
+from rag.sources.gdrive.drive_auth_cred_provider import DriveAuth
 
 auth = DriveAuth(
     credentials_path="F:/rag/secrets/credentials.json",

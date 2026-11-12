@@ -1,0 +1,11 @@
+# src/rag/storage/file_repository.py
+from abc import ABC, abstractmethod
+from collections.abc import Sequence
+
+from rag.sources.source_file import SourceFile
+
+
+class FileRepo(ABC):
+    @abstractmethod
+    def upsert_many(self, files: Sequence[SourceFile]) -> None:
+        """Create or update file metadata."""

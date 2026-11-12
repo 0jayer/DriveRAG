@@ -5,8 +5,10 @@ from google.auth.exceptions import RefreshError
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
+
+from rag.sources.gdrive.cred_provider import CredentialProvider
  
-class DriveAuth:
+class DriveAuth(CredentialProvider):
     SCOPES = ["https://www.googleapis.com/auth/drive.readonly", "https://www.googleapis.com/auth/userinfo.email", "openid"]
     credentials_path = "F:/rag/secrets/credentials.json"
     tokens_path = "F:/rag/secrets/token.json"
@@ -37,7 +39,7 @@ class DriveAuth:
         return None
     
     #drive authentication
-    def get_credentials(self):
+    def get_credentials(self) -> Credentials:
         creds = self._load_saved_creds()
         
         if creds and creds.expired and creds.refresh_token:

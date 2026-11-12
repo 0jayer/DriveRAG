@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from rag.drive.source_file import SourceFile
+from rag.sources.source_file import SourceFile
 
 class DataSource(ABC):
     @abstractmethod
