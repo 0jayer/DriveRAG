@@ -7,5 +7,5 @@ from rag.sources.source_file import SourceFile
 
 class FileRepo(ABC):
     @abstractmethod
-    def upsert_many(self, files: Sequence[SourceFile]) -> None:
+    def upsert_files(self, files: Sequence[SourceFile]) -> None:
         """Create or update file metadata."""
