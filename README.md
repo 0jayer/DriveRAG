@@ -20,15 +20,23 @@ The intended user flow is:
 4. Split the content into chunks, embed those chunks locally with EmbeddingGemma 2, and store vectors and chunk information in Qdrant. Keep processing state in PostgreSQL so changed or removed files can be reprocessed or deleted from the index.
 5. Ask questions in a local chat. Retrieve relevant chunks from the connected Drive corpus and use the local Qwen3.5 9B model to compose answers grounded in those documents.
 
-## Project layout
-
 ```text
-data/       Google Drive metadata and database code
-docs/       Markdown files used by the current RAG prototype (create this directory)
-sql/        PostgreSQL schema
-test/       Database inspection and metadata-ingestion scripts
-rag.py      Local Markdown retrieval and question-answering prototype
-compose.yaml PostgreSQL and Qdrant services
+src/rag/
+  sources/
+    data_source.py                 # Abstract DataSource contract
+    source_file.py                 # SourceFile data class
+    gdrive/
+      drive.py                     # Google Drive DataSource implementation
+      cred_provider.py             # CredentialProvider abstraction
+      drive_auth_cred_provider.py  # Google OAuth implementation
+      path_resolver.py              # Google Drive folder-path handling
+
+  storage/
+    database.py                    # PostgreSQL connection context manager
+    schema_initializer.py          # Applies storage/schema.sql
+    file_repo.py                   # Abstract FileRepo contract
+    postgres_file_repo.py          # PostgreSQL FileRepo implementation
+    schema.sql                     # PostgreSQL files and chunks schema
 ```
 
 ## Privacy and scope

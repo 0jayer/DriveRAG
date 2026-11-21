@@ -10,9 +10,7 @@ from rag.sources.gdrive.cred_provider import CredentialProvider
  
 class DriveAuth(CredentialProvider):
     SCOPES = ["https://www.googleapis.com/auth/drive.readonly", "https://www.googleapis.com/auth/userinfo.email", "openid"]
-    credentials_path = "F:/rag/secrets/credentials.json"
-    tokens_path = "F:/rag/secrets/token.json"
-
+    
     def __init__(self,
                  credentials_path = "F:/rag/secrets/credentials.json",
                  tokens_path = "F:/rag/secrets/token.json",
@@ -27,9 +25,13 @@ class DriveAuth(CredentialProvider):
             token.write(creds.to_json())
 
     # check if token has scopes
+    #edit: added a try catch around the function to catch empty/corrupted json formats
     def _token_has_scopes(self):
-        with open(self.tokens_path, encoding = "utf-8") as file:
-            granted = set(json.load(file).get("scopes", []))
+        try:
+            with open(self.tokens_path, encoding = "utf-8") as file:
+                granted = set(json.load(file).get("scopes", []))
+        except json.JSONDecodeError:
+            return False
         return set(self.SCOPES) <= granted                  #check if required scopes is a subset of granted scopes
 
 
@@ -56,6 +58,6 @@ class DriveAuth(CredentialProvider):
 
     def _login(self):
         flow = InstalledAppFlow.from_client_secrets_file(self.credentials_path, self.SCOPES)
-        creds = flow.run_local_server(port = 8000)
+        creds = flow.run_local_server(port = self.port)
         self._save_token(creds)
         return creds

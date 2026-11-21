@@ -1,15 +1,17 @@
 import argparse
-from pathlib import Path
+import os
 import sys
+
+from dotenv import load_dotenv
+
+from rag.storage.database import Database
 
 from psycopg import sql
 from psycopg.rows import dict_row
 
-# test_db.py lives in the test subdirectory, while metadata.py is at the
-# project root. Ensure the root is importable both from the editor and when
-# this file is run directly.
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from rag.storage.database import get_conn
+load_dotenv()
+
+database = Database(os.environ["DATABASE_URL"])
 
 
 # uv run test_db.py                                   # summary
@@ -129,7 +131,7 @@ def main():
         out = sys.stdout
 
     try:
-        with get_conn() as conn:
+        with database.get_conn() as conn:
             conn.read_only = True
             if args.dump or args.table or args.where:
                 dump(conn, out, args.table, args.limit, None if args.full else 80, args.where)

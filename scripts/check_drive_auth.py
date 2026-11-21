@@ -1,6 +1,12 @@
+import os
+
+from dotenv import load_dotenv
+
 from googleapiclient.discovery import build
 
 from rag.sources.gdrive.drive_auth_cred_provider import DriveAuth
+
+load_dotenv()
 
 auth = DriveAuth(
     credentials_path="F:/rag/secrets/credentials.json",
