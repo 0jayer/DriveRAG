@@ -1,6 +1,6 @@
-from rag.sources.gdrive.path_resolver import PathResolver
+from rag.sources.gdrive.gdrive_path_resolver import GDrivePathResolver
 
-FOLDER = PathResolver.FOLDER
+FOLDER = GDrivePathResolver.FOLDER
 
 
 def make(id, name, parents=None, mime="application/pdf"):
@@ -8,7 +8,7 @@ def make(id, name, parents=None, mime="application/pdf"):
 
 
 def resolve(files):
-    PathResolver().resolve_paths(files)
+    GDrivePathResolver().resolve_paths(files)
     return {f["id"]: f["path"] for f in files}
 
 

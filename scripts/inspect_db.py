@@ -4,14 +4,14 @@ import sys
 
 from dotenv import load_dotenv
 
-from rag.storage.database import Database
+from rag.storage.postgres_database import PostgresDatabase
 
 from psycopg import sql
 from psycopg.rows import dict_row
 
 load_dotenv()
 
-database = Database(os.environ["DATABASE_URL"])
+database = PostgresDatabase(os.environ["DATABASE_URL"])
 
 
 # uv run test_db.py                                   # summary

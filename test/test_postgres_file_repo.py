@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 from rag.sources.source_file import SourceFile
 from rag.storage.database import Database
+from rag.storage.postgres_database import PostgresDatabase
 from rag.storage.postgres_file_repo import PostgresFileRepo
 from rag.storage.schema_initializer import SchemaInitializer
 
@@ -22,7 +23,7 @@ def database() -> Database:
     if not database_url:
         pytest.skip("DATABASE_URL is not set")
 
-    database = Database(database_url)
+    database = PostgresDatabase(database_url)
     try:
         SchemaInitializer(database).init_db()
     except psycopg.OperationalError:

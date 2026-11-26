@@ -16,7 +16,7 @@ def write_config(path):
         """
 components:
   database:
-    class: rag.storage.database:Database
+    class: rag.storage.postgres_database:PostgresDatabase
     options:
       db_url: ${DATABASE_URL}
   credential_provider:
@@ -25,7 +25,7 @@ components:
       credentials_path: ${GDRIVE_CREDENTIALS_PATH}
       tokens_path: ${GDRIVE_TOKEN_PATH}
   path_resolver:
-    class: rag.sources.gdrive.path_resolver:PathResolver
+    class: rag.sources.gdrive.gdrive_path_resolver:GDrivePathResolver
   data_source:
     class: rag.sources.gdrive.drive:Drive
     dependencies:

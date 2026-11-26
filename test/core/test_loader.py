@@ -16,7 +16,7 @@ def make_settings() -> Settings:
     return Settings(
         components={
             "database": ComponentSpec(
-                class_path="rag.storage.database:Database",
+                class_path="rag.storage.postgres_database:PostgresDatabase",
                 options={"db_url": "postgresql://localhost/test"},
                 dependencies={},
             ),
@@ -29,7 +29,7 @@ def make_settings() -> Settings:
                 dependencies={},
             ),
             "path_resolver": ComponentSpec(
-                class_path="rag.sources.gdrive.path_resolver:PathResolver",
+                class_path="rag.sources.gdrive.gdrive_path_resolver:GDrivePathResolver",
                 options={},
                 dependencies={},
             ),
@@ -108,12 +108,12 @@ def test_build_components_rejects_dependency_cycles():
     settings = Settings(
         components={
             "first": ComponentSpec(
-                class_path="rag.storage.database:Database",
+                class_path="rag.storage.postgres_database:PostgresDatabase",
                 options={},
                 dependencies={"db_url": "second"},
             ),
             "second": ComponentSpec(
-                class_path="rag.storage.database:Database",
+                class_path="rag.storage.postgres_database:PostgresDatabase",
                 options={},
                 dependencies={"db_url": "first"},
             ),

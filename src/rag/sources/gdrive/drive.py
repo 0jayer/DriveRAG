@@ -32,7 +32,7 @@ class Drive(DataSource):
       return [
           self.to_source_file(f)
           for f in files
-          if f["mimeType"] != PathResolver.FOLDER
+          if not self._resolver.is_folder(f["mimeType"])
       ]
   
   def fetch_content(self, file) -> bytes:

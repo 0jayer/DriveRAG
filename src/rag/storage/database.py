@@ -1,17 +1,16 @@
-from contextlib import contextmanager
-from collections.abc import Generator
+from abc import ABC, abstractmethod
+from contextlib import AbstractContextManager
 
-import psycopg
 
-class Database:
-    def __init__(self, db_url: str) -> None:
-        if not db_url:
-            raise ValueError("Database URL is required")
-        
-        self._db_url = db_url
+class Database(ABC):
+    """Abstract contract for a database connection provider.
 
-    #A context manager for database connnection, safer way to manage database
-    @contextmanager
-    def get_conn(self) -> Generator[psycopg.Connection, None, None]:
-        with psycopg.connect(self._db_url) as connection:
-            yield connection
+    Concrete implementations (e.g. PostgresDatabase) live in their own
+    modules and are selected via config.yaml.  Code that depends on a
+    database connection should type-hint against this class, never against
+    a specific backend.
+    """
+
+    @abstractmethod
+    def get_conn(self) -> AbstractContextManager:
+        """Return a context manager that yields a live database connection."""
