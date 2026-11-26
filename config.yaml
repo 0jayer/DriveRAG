@@ -1,0 +1,29 @@
+components:
+  database:
+    class: rag.storage.database:Database
+    options:
+      db_url: ${DATABASE_URL}
+
+  credential_provider:
+    class: rag.sources.gdrive.drive_auth_cred_provider:DriveAuth
+    options:
+      credentials_path: ${GDRIVE_CREDENTIALS_PATH}
+      tokens_path: ${GDRIVE_TOKEN_PATH}
+
+  path_resolver:
+    class: rag.sources.gdrive.path_resolver:PathResolver
+    options: {}
+
+  data_source:
+    class: rag.sources.gdrive.drive:Drive
+    dependencies:
+      credential_provider:
+        ref: credential_provider
+      resolver:
+        ref: path_resolver
+
+  file_repo:
+    class: rag.storage.postgres_file_repo:PostgresFileRepo
+    dependencies:
+      database:
+        ref: database

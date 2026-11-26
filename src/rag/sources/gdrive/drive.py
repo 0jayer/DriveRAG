@@ -27,8 +27,6 @@ class Drive(DataSource):
             credentials=credentials,
         )
     self._account_id = (self._service.about().get(fields="user(emailAddress)").execute()["user"]["emailAddress"])
-    return self
-
   def list_source_files(self) -> list[SourceFile]:
       files = self._resolver.resolve_paths(self._list_raw_files())
       return [

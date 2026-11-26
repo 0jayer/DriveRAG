@@ -11,11 +11,16 @@ from rag.sources.gdrive.cred_provider import CredentialProvider
 class DriveAuth(CredentialProvider):
     SCOPES = ["https://www.googleapis.com/auth/drive.readonly", "https://www.googleapis.com/auth/userinfo.email", "openid"]
     
-    def __init__(self,
-                 credentials_path = "F:/rag/secrets/credentials.json",
-                 tokens_path = "F:/rag/secrets/token.json",
-                 port = 8000
-                ):
+    def __init__(
+        self,
+        credentials_path: str,
+        tokens_path: str,
+        port: int = 8000,
+    ) -> None:
+        if not credentials_path:
+            raise ValueError("Google Drive credentials path is required")
+        if not tokens_path:
+            raise ValueError("Google Drive token path is required")
         self.credentials_path = credentials_path
         self.tokens_path = tokens_path
         self.port = port

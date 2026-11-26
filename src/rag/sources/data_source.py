@@ -4,7 +4,7 @@ from rag.sources.source_file import SourceFile
 
 class DataSource(ABC):
     @abstractmethod
-    def connect(self):
+    def connect(self) -> None:
         """Authenticate and get ready to list files."""
 
     @abstractmethod
