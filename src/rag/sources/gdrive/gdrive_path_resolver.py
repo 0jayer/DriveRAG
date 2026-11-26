@@ -24,7 +24,7 @@ class GDrivePathResolver(PathResolver):
     def _build_folder_map(self, files: list[dict]) -> dict:
         folders: dict = {}
         for f in files:
-            if f["mimeType"] == self.FOLDER:
+            if self.is_folder(f["mimeType"]):
                 folders[f["id"]] = (f["name"], (f.get("parents") or [None])[0])
         return folders
 
