@@ -23,7 +23,6 @@ T = TypeVar("T")
 @dataclass(frozen=True)
 class AppContainer:
     data_source: DataSource
-    database: Database
     file_repo: FileRepo
 
 
@@ -43,7 +42,6 @@ def build_container(
     components = build_components(settings, _COMPONENT_TYPES)
     return AppContainer(
         data_source=_require_component(components, "data_source", DataSource),
-        database=_require_component(components, "database", Database),
         file_repo=_require_component(components, "file_repo", FileRepo),
     )
 

@@ -9,9 +9,8 @@ def main() -> None:
     container.file_repo.upsert_files(files)
     print(f"listed {len(files)} files from Drive")
 
-    with container.database.get_conn() as conn:
-        total = conn.execute("SELECT count(*) FROM files").fetchone()[0]
-    print(f"files in db: {total}")
+    total = container.file_repo.count_files()
+    print(f"files in repository: {total}")
 
 
 if __name__ == "__main__":

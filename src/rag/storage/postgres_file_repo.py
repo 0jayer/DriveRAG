@@ -47,3 +47,7 @@ class PostgresFileRepo(FileRepo):
         with self._database.get_conn() as conn:
             with conn.cursor() as cur:
                 cur.executemany(self.UPSERT_FILE_SQL, [asdict(f) for f in files])
+
+    def count_files(self) -> int:
+        with self._database.get_conn() as conn:
+            return conn.execute("SELECT count(*) FROM files").fetchone()[0]

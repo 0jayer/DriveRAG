@@ -1,7 +1,6 @@
 import importlib.util
-from contextlib import contextmanager
-from types import SimpleNamespace
 from pathlib import Path
+from types import SimpleNamespace
 
 SCRIPT_PATH = Path(__file__).resolve().parents[1] / "scripts" / "run_sync.py"
 SPEC = importlib.util.spec_from_file_location("run_sync", SCRIPT_PATH)
@@ -25,24 +24,14 @@ class FakeDataSource:
 class FakeFileRepo:
     def __init__(self):
         self.files = None
+        self.count_calls = 0
 
     def upsert_files(self, files):
         self.files = files
 
-
-class FakeConnection:
-    def execute(self, query):
-        assert query == "SELECT count(*) FROM files"
-        return self
-
-    def fetchone(self):
-        return (2,)
-
-
-class FakeDatabase:
-    @contextmanager
-    def get_conn(self):
-        yield FakeConnection()
+    def count_files(self):
+        self.count_calls += 1
+        return 2
 
 
 def test_main_uses_container_components(monkeypatch, capsys):
@@ -51,7 +40,6 @@ def test_main_uses_container_components(monkeypatch, capsys):
     container = SimpleNamespace(
         data_source=source,
         file_repo=repo,
-        database=FakeDatabase(),
     )
     monkeypatch.setattr(run_sync, "build_container", lambda: container)
 
@@ -59,7 +47,8 @@ def test_main_uses_container_components(monkeypatch, capsys):
 
     assert source.connected
     assert repo.files == ["file-1", "file-2"]
+    assert repo.count_calls == 1
     assert capsys.readouterr().out.splitlines() == [
         "listed 2 files from Drive",
-        "files in db: 2",
+        "files in repository: 2",
     ]

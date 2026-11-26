@@ -126,6 +126,15 @@ def test_upsert_empty_list_is_a_noop(database):
     PostgresFileRepo(database).upsert_files([])
 
 
+def test_count_files_returns_total_file_count(database, cleanup):
+    repo = PostgresFileRepo(database)
+    before = repo.count_files()
+
+    repo.upsert_files([make_file(f"{cleanup}-count")])
+
+    assert repo.count_files() == before + 1
+
+
 def test_same_external_id_in_different_accounts_are_separate_rows(database, cleanup):
     PostgresFileRepo(database).upsert_files([
         make_file(f"{cleanup}-x", account_id="acct-1"),

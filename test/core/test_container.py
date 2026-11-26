@@ -61,12 +61,12 @@ def test_build_container_constructs_components_without_connecting(
     assert isinstance(container, AppContainer)
     assert isinstance(container.data_source, Drive)
     assert isinstance(container.data_source, DataSource)
-    assert isinstance(container.database, Database)
     assert isinstance(container.file_repo, PostgresFileRepo)
     assert isinstance(container.file_repo, FileRepo)
     assert isinstance(container.data_source._credential_provider, CredentialProvider)
     assert isinstance(container.data_source._resolver, PathResolver)
-    assert container.file_repo._database is container.database
+    assert isinstance(container.file_repo._database, Database)
+    assert not hasattr(container, "database")
 
 
 def test_build_container_rejects_missing_required_component(tmp_path, monkeypatch):

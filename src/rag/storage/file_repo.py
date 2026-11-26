@@ -9,3 +9,7 @@ class FileRepo(ABC):
     @abstractmethod
     def upsert_files(self, files: Sequence[SourceFile]) -> None:
         """Create or update file metadata."""
+
+    @abstractmethod
+    def count_files(self) -> int:
+        """Return the number of files stored in the repository."""
