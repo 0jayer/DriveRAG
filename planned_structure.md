@@ -42,8 +42,11 @@ rag/
 │       │       ├── __init__.py
 │       │       ├── drive.py         # Drive(DataSource)
 │       │       ├── cred_provider.py # CredentialProvider (abstract)
-│       │       ├── drive_auth_cred_provider.py # token + OAuth flow
-│       │       ├── path_resolver.py # folder map + path building
+│       │       ├── token_store.py   # TokenStore (abstract) + JsonTokenStore
+│       │       ├── drive_auth_cred_provider.py # OAuth flow + refresh (uses TokenStore)
+│       │       ├── file_mapper.py   # FileMapper (abstract) + GDriveFileMapper
+│       │       ├── path_resolver.py # PathResolver (abstract)
+│       │       ├── gdrive_path_resolver.py # GDrivePathResolver(PathResolver)
 │       │       └── exporter.py      # downloads / exports file bytes
 │       │
 │       ├── parsing/                 # file -> Document
@@ -128,6 +131,7 @@ rag/
 │
 └── test/
     ├── conftest.py
+    ├── test_gdrive_components.py    # current
     ├── test_path_resolver.py        # current
     ├── test_postgres_file_repo.py   # current
     ├── fakes/                       # fake source, vector store, embedder, LLM

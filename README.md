@@ -18,7 +18,7 @@ Run the current sync with `uv run python scripts/run_sync.py` after configuring 
 
 `Drive.fetch_content()` is not implemented yet, so the current sync does not ingest document contents. `SchemaInitializer` exists, but `run_sync.py` does not initialize the database schema; initialize it before running the sync. The PostgreSQL integration tests initialize the schema themselves.
 
-The loader currently supports the component roles wired by the container: database, credential provider, path resolver, data source, and file repository. The abstract extension contracts include `CredentialProvider`, `DataSource`, and `FileRepo`. `Database` and `PathResolver` are currently concrete classes.
+The loader currently supports the component roles wired by the container: database, credential provider, path resolver, data source, and file repository. The abstract extension contracts include `Database`, `CredentialProvider`, `PathResolver`, `DataSource`, and `FileRepo`.
 
 ## Adding or switching an adapter
 
@@ -35,7 +35,7 @@ components:
 
 The class path uses `module:ClassName`; constructor values go under `options`, and shared components are injected through `dependencies` references. The example assumes `MyFileRepo` accepts the current `Database` dependency. If the adapter needs an additional Python package, add it to `pyproject.toml`. The loader only trusts classes from the `rag` package.
 
-Switching an implementation of an already wired role should not require changes to the sync script or container, provided it satisfies the same contract and dependency shape. Today, `Database` and `PathResolver` are concrete classes, and the container requires a `Database` component. So replacing PostgreSQL with a different storage technology is **not yet** config-only; that will need a backend-neutral dependency contract and container wiring. Adding a **new role** (for example, the first parser or vector-store component) also requires adding its contract and wiring that role into the loader/container once. After that, implementations of that role can be selected through configuration.
+Switching an implementation of an already wired role should not require changes to the sync script or container, provided it satisfies the same contract and dependency shape. Adding a **new role** (for example, the first parser or vector-store component) requires adding its contract and wiring that role into the loader/container once. After that, implementations of that role can be selected through configuration.
 
 ## Current repository structure
 
@@ -75,11 +75,15 @@ rag/
 │       │       ├── cred_provider.py
 │       │       ├── drive.py
 │       │       ├── drive_auth_cred_provider.py
-│       │       └── path_resolver.py
+│       │       ├── file_mapper.py
+│       │       ├── gdrive_path_resolver.py
+│       │       ├── path_resolver.py
+│       │       └── token_store.py
 │       └── storage/
 │           ├── __init__.py
 │           ├── database.py
 │           ├── file_repo.py      # FileRepo contract: upsert and count
+│           ├── postgres_database.py
 │           ├── postgres_file_repo.py
 │           ├── schema.sql
 │           └── schema_initializer.py
@@ -88,6 +92,7 @@ rag/
     │   ├── test_config.py
     │   ├── test_container.py
     │   └── test_loader.py
+    ├── test_gdrive_components.py
     ├── test_path_resolver.py
     ├── test_postgres_file_repo.py
     └── test_run_sync.py
